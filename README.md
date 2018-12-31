@@ -7,6 +7,8 @@ vue CLI 3をインストールしてビルドします。js/layers.jsに追記�
 ```
 npm run build
 ```
+# Authors
+ken ochiai
 
 # 説明
 ## 変数
