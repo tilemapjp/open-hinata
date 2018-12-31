@@ -141,7 +141,6 @@ const moduleInfo = {
   getters: {
   },
   mutations: {
-
     update (state,payload) {
       let variable;
       switch (payload.name) {
@@ -162,7 +161,6 @@ const moduleInfo = {
       }
       state[variable][payload.mapName] = payload.value
     },
-
     updateSeaLevel5m (state,payload) {
       state.seaLevel5m[payload.mapName] = payload.value
     },
@@ -177,8 +175,6 @@ const moduleInfo = {
     }
   }
 };
-
-
 
 const store = new Vuex.Store({
   modules: {

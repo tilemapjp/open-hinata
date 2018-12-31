@@ -26,10 +26,6 @@
       'v-flood': DialogInfoFlood
     },
     props: ['mapName'],
-    data () {
-      return {
-      }
-    },
     computed: {
       info () {
         return this.$store.state.base.dialogsInfo[this.mapName]
@@ -73,7 +69,6 @@
         border-top-left-radius: 4px;
         border-top-right-radius: 4px;
         cursor: grab;
-        /*width: 50px;*/
     }
     .close-btn-div{
         position: absolute;

@@ -95,7 +95,6 @@ for (let i of mapsStr) {
   flood10Obj[i] = new ImageLaye(new Dem10());
   flood10Obj[i].getSource().on('beforeoperations', function(event) {
     event.data.level = Number($('#' + i  + " .flood-range10m").val());
-    // event.data.level = 100;
   });
 }
 //dem5---------------------------------------------------------------------------------
@@ -117,7 +116,6 @@ for (let i of mapsStr) {
   flood5Obj[i] = new ImageLaye(new Dem5());
   flood5Obj[i].getSource().on('beforeoperations', function(event) {
     event.data.level = Number($('#' + i  + " .flood-range5m").val());
-    // event.data.level = 100;
   });
 }
 const floodSumm = 'zoom12以上で表示';

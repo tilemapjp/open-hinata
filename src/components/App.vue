@@ -27,158 +27,156 @@
 </template>
 
 <script>
-import DialogMenu from './Dialog-menu'
-import DialogLayer from './Dialog-layer'
-import * as Permalink from '../js/permalink'
-import Inobounce from '../js/inobounce'
-import * as MyMap from '../js/mymap'
-import JqueryFunction from '../js/jquery-function'
-export default {
-  name: 'App',
-  components: {
-    'v-dialog-layer': DialogLayer,
-    'v-dialog-menu': DialogMenu
-  },
-  data () {
-    return {
-      mapNames: ['map01','map02','map03','map04'],
-      btnSize: '',
-      mapSize: {
-        map01: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
-        map02: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
-        map03: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
-        map04: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'}
-      },
-      zoom: {map01: '',map02: '',map03: '',map04: ''},
-      mapFlg: {map01:true, map02:false, map03:false, map04:false},
-      synchDivFlg: false,
-      synchFlg: true,
-      shortUrlText: '',
-      myToggle: false,
-      selected: 20,
-      options: [
-        { value: '20', text: '20' },
-        { value: '30', text: '30' },
-        { value: '50', text: '50' }
+  import DialogMenu from './Dialog-menu'
+  import DialogLayer from './Dialog-layer'
+  import * as Permalink from '../js/permalink'
+  import Inobounce from '../js/inobounce'
+  import * as MyMap from '../js/mymap'
+  import JqueryFunction from '../js/jquery-function'
+  export default {
+    name: 'App',
+    components: {
+      'v-dialog-layer': DialogLayer,
+      'v-dialog-menu': DialogMenu
+    },
+    data () {
+      return {
+        mapNames: ['map01','map02','map03','map04'],
+        btnSize: '',
+        mapSize: {
+          map01: {top: 0, left: 0, width: '100%', height: window.innerHeight + 'px'},
+          map02: {top: 0, right: 0, width: 0, height: window.innerHeight + 'px'},
+          map03: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'},
+          map04: {top: 0, right: 0, width: '50%', height: window.innerHeight / 2 + 'px'}
+        },
+        zoom: {map01: '',map02: '',map03: '',map04: ''},
+        mapFlg: {map01:true, map02:false, map03:false, map04:false},
+        synchDivFlg: false,
+        synchFlg: true,
+        shortUrlText: '',
+        myToggle: false,
+        selected: 20,
+        options: [
+          { value: '20', text: '20' },
+          { value: '30', text: '30' },
+          { value: '50', text: '50' }
         ]
-    }
-  },
-  computed: {
-    s_dialogs () { return this.$store.state.base.dialogs},
-    s_splitFlg () { return this.$store.state.base.splitFlg},
-    s_dialogMaxZindex () { return this.$store.state.base.dialogMaxZindex}
-  },
-  methods: {
-    // レイヤーのダイアログを開く------------------------------------------------------------------
-    openDialog (dialog) {
-      this.$store.commit('base/incrDialogMaxZindex');
-      dialog.style["z-index"] = this.s_dialogMaxZindex;
-      dialog.style.display = 'block'
-
-      // this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
-    },
-    // 分割-------------------------------------------------------------------------------------
-    splitMap () {
-      this.$store.commit('base/incrSplitFlg');
-      this.splitMap2();
-      Permalink.moveEnd()
-    },
-    // 分割その２
-    splitMap2 () {
-      const vm = this;
-      const height = window.innerHeight + 'px';
-      const height2 = window.innerHeight / 2 + 'px';
-      const contentHeight =(window.innerHeight -100) + 'px';
-      const contentHeight2 =((window.innerHeight/2) -100) + 'px';
-      switch (this.s_splitFlg) {
-        // 1画面
-        case 1:
-          vm.synchDivFlg = false;
-          vm.mapFlg['map02'] = false; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
-          vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height};
-          vm.mapSize['map02'] = {top: 0, right: 0, width: 0, height: 0};
-          vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          break;
-        // 2画面（縦２画面）
-        case 2:
-          vm.synchDivFlg = true;
-          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
-          vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height};
-          vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height};
-          vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          break;
-        // 2画面（横２画面）
-        case 3:
-          vm.synchDivFlg = true;
-          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
-          vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height2};
-          vm.mapSize['map02'] = {top: '50%', left: 0, width: '100%', height: height2};
-          vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
-          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          break;
-        // 3画面１（左が縦全、右が縦半）
-        case 4:
-          vm.synchDivFlg = true;
-          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = false;
-          vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height};
-          vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height2};
-          vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
-          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          break;
-        // 3画面2（全て縦半）
-        case 5:
-          vm.synchDivFlg = true;
-          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = false;
-          vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height2};
-          vm.mapSize['map02'] = {top: '50%', left: 0, width: '50%', height: height2};
-          vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
-          vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
-          break;
-        // 4画面（全て縦半）
-        case 6:
-          vm.synchDivFlg = true;
-          vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = true;
-          vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height2};
-          vm.mapSize['map02'] = {top: 0, right: 0, width: '50%', height: height2};
-          vm.mapSize['map03'] = {top: '50%', left: 0, width: '50%', height: height2};
-          vm.mapSize['map04'] = {top: '50%', left: '50%', width: '50%', height: height2}
       }
-      this.$nextTick(function () {
-        MyMap.resize ()
-      })
     },
-    // 同期-------------------------------------------------------------------------------------
-    synch () {
-      MyMap.synch(this)
-    }
-  },
-  mounted () {
-    JqueryFunction();
-    this.$nextTick(function () {
-      // 縦バウンス無効化https://github.com/lazd/iNoBounce
-      Inobounce();
-      // map初期化
-      MyMap.initMap(this);
-      // パーマリンク
-      Permalink.permalinkEventSet();
-      this.splitMap2();
-      // リサイズ
-      const resize = () => {
-        if (window.innerWidth < 700) {
-          this.btnSize = 'sm'
-        } else {
-          this.btnSize = ''
+    computed: {
+      s_dialogs () { return this.$store.state.base.dialogs},
+      s_splitFlg () { return this.$store.state.base.splitFlg},
+      s_dialogMaxZindex () { return this.$store.state.base.dialogMaxZindex}
+    },
+    methods: {
+      // レイヤーのダイアログを開く------------------------------------------------------------------
+      openDialog (dialog) {
+        this.$store.commit('base/incrDialogMaxZindex');
+        dialog.style["z-index"] = this.s_dialogMaxZindex;
+        dialog.style.display = 'block'
+
+        // this.$store.commit('editDialogArr', {name: dialog.name, flg: 'toggle'})
+      },
+      // 分割-------------------------------------------------------------------------------------
+      splitMap () {
+        this.$store.commit('base/incrSplitFlg');
+        this.splitMap2();
+        Permalink.moveEnd()
+      },
+      // 分割その２
+      splitMap2 () {
+        const vm = this;
+        const height = window.innerHeight + 'px';
+        const height2 = window.innerHeight / 2 + 'px';
+        switch (this.s_splitFlg) {
+          // 1画面
+          case 1:
+            vm.synchDivFlg = false;
+            vm.mapFlg['map02'] = false; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
+            vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height};
+            vm.mapSize['map02'] = {top: 0, right: 0, width: 0, height: 0};
+            vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
+            vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+            break;
+          // 2画面（縦２画面）
+          case 2:
+            vm.synchDivFlg = true;
+            vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
+            vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height};
+            vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height};
+            vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
+            vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+            break;
+          // 2画面（横２画面）
+          case 3:
+            vm.synchDivFlg = true;
+            vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = false; vm.mapFlg['map04'] = false;
+            vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height2};
+            vm.mapSize['map02'] = {top: '50%', left: 0, width: '100%', height: height2};
+            vm.mapSize['map03'] = {top: 0, left: 0, width: 0, height: 0};
+            vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+            break;
+          // 3画面１（左が縦全、右が縦半）
+          case 4:
+            vm.synchDivFlg = true;
+            vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = false;
+            vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height};
+            vm.mapSize['map02'] = {top: 0, left: '50%', width: '50%', height: height2};
+            vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
+            vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+            break;
+          // 3画面2（全て縦半）
+          case 5:
+            vm.synchDivFlg = true;
+            vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = false;
+            vm.mapSize['map01'] = {top: 0, left: 0, width: '100%', height: height2};
+            vm.mapSize['map02'] = {top: '50%', left: 0, width: '50%', height: height2};
+            vm.mapSize['map03'] = {top: '50%', left: '50%', width: '50%', height: height2};
+            vm.mapSize['map04'] = {top: 0, left: 0, width: 0, height: 0};
+            break;
+          // 4画面（全て縦半）
+          case 6:
+            vm.synchDivFlg = true;
+            vm.mapFlg['map02'] = true; vm.mapFlg['map03'] = true; vm.mapFlg['map04'] = true;
+            vm.mapSize['map01'] = {top: 0, left: 0, width: '50%', height: height2};
+            vm.mapSize['map02'] = {top: 0, right: 0, width: '50%', height: height2};
+            vm.mapSize['map03'] = {top: '50%', left: 0, width: '50%', height: height2};
+            vm.mapSize['map04'] = {top: '50%', left: '50%', width: '50%', height: height2}
         }
-        // 画面分割
-        this.splitMap2()
-      };
-      resize();
-      window.onresize =  () => resize()
-    })
+        this.$nextTick(function () {
+          MyMap.resize ()
+        })
+      },
+      // 同期-------------------------------------------------------------------------------------
+      synch () {
+        MyMap.synch(this)
+      }
+    },
+    mounted () {
+      JqueryFunction();
+      this.$nextTick(function () {
+        // 縦バウンス無効化https://github.com/lazd/iNoBounce
+        Inobounce();
+        // map初期化
+        MyMap.initMap(this);
+        // パーマリンク
+        Permalink.permalinkEventSet();
+        this.splitMap2();
+        // リサイズ
+        const resize = () => {
+          if (window.innerWidth < 700) {
+            this.btnSize = 'sm'
+          } else {
+            this.btnSize = ''
+          }
+          // 画面分割
+          this.splitMap2()
+        };
+        resize();
+        window.onresize =  () => resize()
+      })
+    }
   }
-}
 </script>
 
 <style scoped>

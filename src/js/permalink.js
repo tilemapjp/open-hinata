@@ -37,7 +37,6 @@ export function permalinkEventSet () {
         store.state.base.maps.map02.removeLayer(store.state.base.maps.map02.getLayers().getArray()[0]);
         store.state.base.maps.map03.removeLayer(store.state.base.maps.map03.getLayers().getArray()[0]);
         store.state.base.maps.map04.removeLayer(store.state.base.maps.map04.getLayers().getArray()[0]);
-        // const urlLayerListArr = rison.decode(obj[key])
         const urlLayerListArr = JSON.parse(obj[key]);
         for (let i = 0; i < urlLayerListArr.length; i++) {
           // 逆ループ
@@ -57,13 +56,11 @@ export function permalinkEventSet () {
                         opacity: urlLayerListArr[i][j].o,
                         summary: node.data.summary,
                         component: urlLayerListArr[i][j].c
-                        // component: node.data.component
                       },
                       mapName: mapName
                     });
                     // レイヤーに設定項目があるとき
                     if (node.data.component) {
-                      // console.log(urlLayerListArr[i][j].c);
                       store.commit('base/incrDialogMaxZindex');
                       store.state.base.dialogs[mapName].style.display = 'block';
                       const top = store.state.base.dialogs[mapName].style.top;
@@ -83,15 +80,12 @@ export function permalinkEventSet () {
                           }
                         };
                       store.commit('base/pushDialogsInfo', {mapName: mapName, dialog: infoDialog});
-
                       const c = urlLayerListArr[i][j].c;
-                      // console.log(c);
                       for (let k=0; k<c.values.length;k++) {
-                        const value = c.values[k];
-                        store.commit('info/update', {name: c.name, mapName: mapName, value: value, order: k})
+                        store.commit('info/update', {name: c.name, mapName: mapName, value: c.values[k], order: k})
                       }
                     }
-                    // レイヤーに設定項目があるとき　ここまで
+                    // レイヤーに設定項目があるとき。ここまで
                   }
                 }
               }
@@ -118,7 +112,6 @@ export function moveEnd () {
   let parameter = '?S=' + store.state.base.splitFlg;
   parameter += '&L=' + store.getters['base/layerLists'];
   // console.log(store.getters['base/layerLists'])
-  // parameter += '&C=' + store.getters['base/layerLists'];
   // parameterだけエンコードする。起動時にwindow.location.hashでハッシュ値を取得するため
   parameter = encodeURIComponent(parameter);
   const state = {

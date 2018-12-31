@@ -9,25 +9,25 @@
 </template>
 
 <script>
-export default {
-  name: 'Dialog',
-  props: ['dialog'],
-  methods: {
-    closeBtn () {
-      this.dialog.style.display = 'none'
+  export default {
+    name: 'Dialog',
+    props: ['dialog'],
+    methods: {
+      closeBtn () {
+        this.dialog.style.display = 'none'
+      },
+      dialogMouseDown () {
+        this.$store.commit('base/incrDialogMaxZindex');
+        this.dialog.style["z-index"] = this.$store.state.base.dialogMaxZindex
+      }
     },
-    dialogMouseDown () {
-      this.$store.commit('base/incrDialogMaxZindex');
-      this.dialog.style["z-index"] = this.$store.state.base.dialogMaxZindex
-    }
-  },
-  computed: {
-    s_flg: function () {
-      const result = this.$store.state.base.dialogArr.find(el => el.name === this.dialog.name);
-      return result.flg
+    computed: {
+      s_flg: function () {
+        const result = this.$store.state.base.dialogArr.find(el => el.name === this.dialog.name);
+        return result.flg
+      }
     }
   }
-}
 </script>
 
 <style scoped>
