@@ -9,14 +9,14 @@ npm run build
 ```
 # 説明
 ## 変数
-複数のコンポーネントから参照する可能性のある変数はstoreに設置している。
-## URLにパラメータがないとき。初期起動時
-store.jsのlayerListsに従ってレイヤーを作成する。
-store.jsのlayerListsはlayers.jsのlayersを参照している。
-## URLにパラメータがあるとき
-pemalink.jsのpermalinkEventSetが作動して初期設定のレイヤーを削除する。その後にパラメータに従ってレイヤーを作成していく。
+複数のコンポーネントから参照する可能性のある変数はstoreに設置しています。
+## URLにパラメータがないとき、初期起動時の動き
+store.jsのlayerListsに従ってレイヤーを作成します。
+store.jsのlayerListsはlayers.jsのlayersを参照しています。
+## URLにパラメータがあるときの動き
+pemalink.jsのpermalinkEventSetが作動して初期設定のレイヤーを削除します。その後にパラメータに従ってレイヤーを作成していきます。
 ## 起動時にレイヤーリスト下段を作成
-起動時にレイヤーリスト下段（背景ダイアログの下段）を作成する。layerListsはlayers.jsのlayersに従ってリストを作っていく。
+起動時にレイヤーリスト下段（背景ダイアログの下段）を作成します。layerListsはlayers.jsのlayersに従ってリストを作っていきます。
 ## レイヤーリスト下段をクリックしたとき
-クリックするとstoreにあるlayerListsにレイヤーの情報を追加する。追加されるとLayer.vueに仕掛けているwatchが動作してOLのレイヤーを操作する。
+クリックするとstoreにあるlayerListsにレイヤーの情報を追加します。追加されるとLayer.vueに仕掛けているwatchが動作してOLのレイヤーを操作します。
 
