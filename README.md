@@ -1,10 +1,12 @@
 # open-hinata
 ol5+vueで作成したオープン版の「ひなたGIS」です。「ひなたGIS」の作者が作っています。
 # Demo
-<a href="https://kenzkenz.xsrv.jp/aaa/" target="_blank">初期時</a>
-<a href="http://bit.ly/2BPJGuQ" target="_blank">２画面</a>
-<a href="http://bit.ly/2BNnb9I" target="_blank">３画面</a>
-<a href="http://bit.ly/2QWvfiS" target="_blank">４画面</a>
+[初期時](https://kenzkenz.xsrv.jp/aaa/)
+[２画面](http://bit.ly/2BPJGuQ)
+[３画面](http://bit.ly/2BNnb9I)
+[４画面](http://bit.ly/2QWvfiS)
+[5万分の１旧版地形図](http://bit.ly/2BNnSjk)
+
 
 # Dependencies
 地図ライブラリはol5を使用。フレームワークにvue+vuexを使用しています。vue CLI 3で開発、ビルドしています。
