@@ -3,10 +3,11 @@ ol5+vueで作成したオープン版の「ひなたGIS」です。「ひなたG
 # Dependencies
 地図ライブラリはol5を使用。フレームワークにvue+vuexを使用しています。vue CLI 3で開発、ビルドしています。
 # Usage
-vue CLI 3をインストールしてビルドします。
+vue CLI 3をインストールしてビルドします。js/layers.jsに追記することによりレイヤーを追加することができます。
 ```
 npm run build
 ```
+
 # 説明
 ## 変数
 vuexを使用しています。
