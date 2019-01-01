@@ -37,9 +37,45 @@ export function initMap (vm) {
     });
     // マップをストアに登録
     store.commit('base/setMap', {mapName: maps[i].mapName, map});
+
     // イベント
+    map.on("pointermove",function(evt){
+      $(".ol-viewport").css({cursor:""});
+      const map = evt.map;
+      const option = {
+        layerFilter: function (layer) {
+          return layer.get('name') === 'Mw5center';
+        }
+      };
+      const feature = map.forEachFeatureAtPixel(evt.pixel,
+        function(feature) {
+          return feature;
+        },option);
+      if (feature) {
+        $(".ol-viewport").css({cursor:"pointer"});
+        return
+      }
+    });
+
     map.on('singleclick', function (evt) {
       console.log(transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
+
+      const map = evt.map;
+      const option = {
+        layerFilter: function (layer) {
+          return layer.get('name') === 'Mw5center';
+        }
+      };
+      const feature = map.forEachFeatureAtPixel(evt.pixel,
+        function(feature) {
+          return feature;
+        },option);
+      if (feature) {
+        const prop = feature.getProperties();
+        window.open(prop.uri, '_blank');
+        return
+      }
+
       const layers = map.getLayers().getArray();
       const result5 = layers.find(el => el === Layers.mw5Obj[mapName]);
       const result20 = layers.find(el => el === Layers.mw20Obj[mapName]);

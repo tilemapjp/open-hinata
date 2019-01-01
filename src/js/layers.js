@@ -1,12 +1,17 @@
 import TileLayer from 'ol/layer/Tile'
+import VectorLayer from 'ol/layer/Vector';
 import ImageLaye from 'ol/layer/Image'
+import VectorSource from 'ol/source/Vector';
 import OSM from 'ol/source/OSM.js'
 import XYZ from 'ol/source/XYZ.js'
+import GeoJSON from 'ol/format/GeoJSON';
+import {Fill, Stroke, Style, Text} from 'ol/style';
 import RasterSource from 'ol/source/Raster';
 import { transformExtent } from 'ol/proj.js'
 import LayerGroup from 'ol/layer/Group';
-import mw5 from './mw5'
-import mw20 from './mw20'
+import mw5 from './mw/mw5'
+import mw20 from './mw/mw20'
+// import mw5center from './mw/mw5center'
 const mapsStr = ['map01','map02','map03','map04'];
 const transformE = extent => {
   return transformExtent(extent,'EPSG:4326','EPSG:3857');
@@ -403,6 +408,39 @@ for (let i of mapsStr) {
 const cs10mSumm = '';
 // CS立体図10Mここまで-----------------------------------------------------------------------
 // 日本版mapwarper５万分の１ここから------------------------------------------------------
+
+const style = new Style({
+  fill: new Fill({
+    color: 'rgba(255, 255, 255, 0.6)'
+  }),
+  stroke: new Stroke({
+    color: '#319FD3',
+    width: 1
+  }),
+  text: new Text({
+    font: '12px Calibri,sans-serif',
+    fill: new Fill({
+      color: '#000'
+    }),
+    stroke: new Stroke({
+      color: '#fff',
+      width: 3
+    })
+  })
+});
+function Mw5center () {
+  this.name = 'Mw5center';
+  this.source = new VectorSource({
+    url:'https://kenzkenz.xsrv.jp/aaa/geojson/mw5center.geojson',
+    format: new GeoJSON()
+  });
+  this.maxResolution = 1222.99;
+  this.style = function(feature) {
+    style.getText().setText(feature.get('title') );
+    return style;
+  }
+}
+
 // 5万分の1,20万分の1の共用コンストラクタ
 function Mapwarper (url,bbox) {
   this.source = new XYZ({
@@ -418,18 +456,68 @@ export const mw5Obj = {};
 for (let i of mapsStr) {
   const layerGroup = [];
   const length =  mw5.length;
+  const features = [];
   for (let j = 0; j < length; j++) {
     const id = mw5[j].id;
     const url = 'https://mapwarper.h-gis.jp/maps/tile/' + id + '/{z}/{x}/{y}.png';
     const bbox = mw5[j].extent;
     const layer = new TileLayer(new Mapwarper(url,bbox));
     layerGroup.push(layer)
+    // console.log(mw5[j])
+    // ------------------------------------------------------
+/*
+    const extent = mw5[j].extent
+    // console.log(extent)
+    const lon = (extent[0] + extent[2]) / 2
+    // console.log(lon)
+    const lat = (extent[1] + extent[3]) / 2
+    // console.log(lat)
+    let title = mw5[j].title
+    const uri = mw5[j].source_uri
+    const result = title.match( /『(.*)』/ );
+    if (result) {
+      title = result[1]
+    }
+    const feature = {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          lon,
+          lat
+        ]
+      },
+      "properties": {
+        "title": title,
+        "uri": uri,
+        "layer": "mw5center"
+        // "_fillColor": "rgb(0,0,255)",
+        // "_radius": 8
+      }
+    }
+    features.push(feature)
+    */
+
   }
+  /*
+  const geojson = {
+    "type": "FeatureCollection",
+    "features": features
+  }
+  console.log(JSON.stringify(geojson))
+  */
+  const mw5centerLayer = new VectorLayer(new Mw5center());
+  layerGroup.push(mw5centerLayer);
+
   mw5Obj[i] = new LayerGroup({
     layers: layerGroup
   })
 }
 const mw5Summ = '';
+
+// console.log(mw5center);
+
+
 // 日本版mapwarper５万分の１ここまで------------------------------------------------------
 // 日本版mapwarper20万分の１ここから------------------------------------------------------
 export const mw20Obj = {};
@@ -490,7 +578,8 @@ const layers =
       children: [
         { text: '海面上昇シミュ5Mdem', data: { id: 'flood5m', layer: flood5Obj, opacity: 1, summary: floodSumm, component: {name: 'flood5m', values:[]}} },
         { text: '海面上昇シミュ10Mdem', data: { id: 'flood10m', layer: flood10Obj, opacity: 1, summary: floodSumm, component: {name: 'flood10m', values:[]}} },
-      ]}
+      ]},
+    // { text: 'ssssss', data: { id: 999, layer: mw5centerObj, opacity: 1, summary: '' } }
   ];
 export const Layers = layers;
 
